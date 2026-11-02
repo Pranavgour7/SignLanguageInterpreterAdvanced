@@ -3,25 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignLens — 3D Sign Language Interpreter & Hand Studio</title>
+    <title>SignLens — Interactive 3D Sign Language Studio &amp; Real-Time Interpreter</title>
+    <meta name="description" content="Explore interactive 3D hand anatomical models, learn verified American Sign Language hand signs, and test real-time gesture recognition using pure on-device computer vision.">
+
+    <!-- Fonts: Inter for crisp interface typography, Plus Jakarta Sans for clean geometric titles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            try {
+                const saved = localStorage.getItem('signlens-theme');
+                if (saved === 'light' || saved === 'dark') {
+                    document.documentElement.setAttribute('data-theme', saved);
+                } else {
+                    // Time-based theme: Daytime (6:00 AM - 7:00 PM) = Light mode, Nighttime = Dark mode
+                    const hours = new Date().getHours();
+                    const isDay = hours >= 6 && hours < 19;
+                    document.documentElement.setAttribute('data-theme', isDay ? 'light' : 'dark');
+                }
+            } catch (_) {}
+        })();
+    </script>
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Top Navigation Bar -->
     <nav class="nav">
         <div class="nav-brand">
-            <span class="nav-icon">🤟</span>
-            <span class="nav-title">SignLens <span class="badge-pill">3D Studio</span></span>
+            <svg class="nav-brand-logo" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+            </svg>
+            <span class="nav-brand-text">SignLens</span>
+            <span class="badge-pill">v2.0 Web Studio</span>
         </div>
         <div class="nav-links">
-            <a href="#studio-3d">Sign Studio (3D / 2D)</a>
-            <a href="#demo">Live Camera Demo</a>
-            <a href="#how-it-works">How It Works</a>
+            <a href="#studio-3d">Sign Studio</a>
+            <a href="#demo">Live Testing Lab</a>
+            <a href="#how-it-works">Architecture</a>
+            <button id="themeToggleBtn" class="nav-theme-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Dark and Light Mode">
+                <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
             <a href="https://github.com/Pranavgour7/SignLanguageInterpreterAdvanced" target="_blank" rel="noopener" class="nav-github" title="View Source on GitHub">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
             </a>
         </div>
     </nav>
@@ -31,24 +72,24 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                <span>Interactive 3D Anatomical Hands &bull; Real ASL Photo References &bull; Fast-Flow AI</span>
+                <span>Spatial 3D Hand Studio &bull; Real-Time On-Device ML</span>
             </div>
             <h1 class="hero-title">
                 American Sign Language<br>
-                <span class="gradient-text">Interactive 3D Studio &amp; Interpreter</span>
+                <span class="hero-title-accent">3D Studio &amp; Interpreter</span>
             </h1>
             <p class="hero-subtitle">
-                Inspect authentic 3D anatomical hand models from any perspective in 360°, learn with real photographic flashcards, 
-                and test your signs live with our sub-millisecond, fast-flow computer vision interpreter.
+                Inspect 3D anatomical hand models from any perspective in full 360°, learn with verified 2D reference illustrations, 
+                and test your signs live with sub-millisecond, fast-flow computer vision.
             </p>
             <div class="hero-actions">
                 <a href="#studio-3d" class="btn btn-primary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                    <span>Explore 3D Hand Models</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Explore 3D Studio</span>
                 </a>
                 <a href="#demo" class="btn btn-secondary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                    <span>Open Live Webcam</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    <span>Launch Live Lab</span>
                 </a>
             </div>
             <div class="hero-stats">
@@ -59,12 +100,12 @@
                 <div class="stat-divider"></div>
                 <div class="stat">
                     <span class="stat-number">360°</span>
-                    <span class="stat-label">Full 3D Rotation</span>
+                    <span class="stat-label">Spatial Orbit</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-number">🪞 Mirror</span>
-                    <span class="stat-label">Left &amp; Right Hand</span>
+                    <span class="stat-number">&lt; 200ms</span>
+                    <span class="stat-label">Flow Latency</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
@@ -75,15 +116,14 @@
         </div>
     </header>
 
-    <!-- Interactive 3D Hand Model Projection Studio Section -->
-    <!-- Unified Interactive Sign Studio (3D & 2D in a Single Seamless Inspector) -->
+    <!-- Unified Sign Knowledge & 3D Interactive Studio -->
     <section id="studio-3d" class="section">
         <div class="container">
             <div class="section-header">
-                <div class="pill-tag">Unified Sign Knowledge Studio</div>
-                <h2 class="section-title">Sign Language Studio &amp; Pose Inspector</h2>
+                <span class="section-tag">Interactive Pose Inspector</span>
+                <h2 class="section-title">Sign Language Studio</h2>
                 <p class="section-subtitle">
-                    Seamlessly switch between an interactive 360° 3D hand model and clear 2D photographic references with real-time finger breakdowns.
+                    Examine authentic 3D hand postures alongside verified 2D reference drawings with real-time anatomical finger breakdowns.
                 </p>
             </div>
 
@@ -105,20 +145,21 @@
                     <div class="studio-view-flag">
                         <div class="mode-switch-group">
                             <button id="modeSplitBtn" class="mode-btn active" title="Split Screen: 3D Model & 2D Guide Side-by-Side">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="12" y1="3" x2="12" y2="21"></line></svg>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="12" y1="3" x2="12" y2="21"></line></svg>
                                 <span>Side-by-Side</span>
                             </button>
                             <button id="mode3DBtn" class="mode-btn" title="Interactive 3D Rotatable Hand Model">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                                 <span>3D Model</span>
                             </button>
                             <button id="mode2DBtn" class="mode-btn" title="2D Real Ground-Truth Reference & Guides">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                                 <span>2D Reference</span>
                             </button>
                         </div>
                         <button id="practiceCurrentSignBtn" class="btn btn-primary btn-sm" title="Practice this sign with live camera">
-                            <span>🎯 Practice Live</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                            <span>Practice in Lab</span>
                         </button>
                     </div>
                 </div>
@@ -131,16 +172,20 @@
                         <button id="viewTopBtn" class="btn btn-secondary btn-sm" title="View from top">Top</button>
                     </div>
                     <button id="toggle3DMirrorBtn" class="btn btn-secondary btn-sm" title="Mirror 3D hand for Left or Right hand viewing">
-                        <span>🪞 Mirror (Left Hand)</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                        <span>Left Hand (Mirrored)</span>
                     </button>
                     <button id="toggleMaterialBtn" class="btn btn-secondary btn-sm" title="Toggle natural human skin tone or studio clay">
-                        <span>🎨 Natural Skin</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
+                        <span>Natural Skin</span>
                     </button>
                     <button id="toggleAutoRotateBtn" class="btn btn-secondary btn-sm active" title="Toggle turntable rotation">
-                        <span>🔄 Auto-Rotate</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        <span>Turntable</span>
                     </button>
                     <button id="reset3DViewBtn" class="btn btn-secondary btn-sm" title="Reset camera orientation and zoom">
-                        <span>↺ Reset View</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                        <span>Reset View</span>
                     </button>
                 </div>
 
@@ -150,7 +195,7 @@
                     <div class="studio-pane studio-pane-3d" id="studioPane3D">
                         <div id="threejsCanvasContainer"></div>
                         <div class="canvas-3d-hint">
-                            <span>🖱️ Click &amp; Drag to rotate 360° &bull; Scroll to Zoom &bull; Touch on mobile</span>
+                            <span>Drag to rotate 360° &bull; Scroll to zoom &bull; Touch enabled</span>
                         </div>
                     </div>
 
@@ -177,7 +222,7 @@
                                     </div>
                                 </div>
                                 <div class="card-tip-box">
-                                    <strong>Camera Recognition Tip:</strong>
+                                    <span class="card-tip-title">Recognition Guidance:</span>
                                     <p id="studioTipVal">—</p>
                                 </div>
                             </div>
@@ -188,8 +233,8 @@
                 <!-- Sign Search & Category Filtering Bar -->
                 <div class="studio-filter-bar">
                     <div class="studio-search-box">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="studioSignSearch" placeholder="Search signs by letter, number, or keyword (e.g. 'A', '3', 'Hello', 'fist')...">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="studioSignSearch" placeholder="Search signs by name or posture (e.g. 'A', '3', 'Hello', 'fist')...">
                         <button id="studioClearSearch" class="btn-clear" style="display:none">&times;</button>
                     </div>
 
@@ -207,7 +252,7 @@
                             <span class="tab-badge">4</span>
                         </button>
                         <button class="tab-btn" data-category="phrase">
-                            <span>Words &amp; Phrases</span>
+                            <span>Phrases</span>
                             <span class="tab-badge">4</span>
                         </button>
                     </div>
@@ -218,7 +263,7 @@
                     <!-- Populated dynamically by app.js with 26 sign pills -->
                 </div>
                 <div class="studio-search-empty" id="studioSearchEmpty" style="display:none">
-                    <span>🔍 No signs match your search. Try typing 'fist', 'hello', or letters A-Z.</span>
+                    <span>No signs match your search query. Try typing 'fist', 'hello', or letters A–Z.</span>
                 </div>
             </div>
         </div>
@@ -228,10 +273,10 @@
     <section id="demo" class="section">
         <div class="container">
             <div class="section-header">
-                <div class="pill-tag">Live Testing Lab</div>
+                <span class="section-tag">Real-Time Evaluation</span>
                 <h2 class="section-title">Webcam Sign Interpreter</h2>
                 <p class="section-subtitle">
-                    Show signs in a continuous flow. The position-invariant model recognizes postures anywhere on camera.
+                    Show signs in a continuous flow. The position-invariant model recognizes hand gestures anywhere in camera view.
                 </p>
             </div>
 
@@ -240,13 +285,19 @@
                 <div class="status-bar" id="statusBar">
                     <div class="status-bar-left">
                         <div class="status-dot" id="statusDot"></div>
-                        <span id="statusText">Loading AI engine...</span>
+                        <span id="statusText">Loading recognition engine...</span>
                     </div>
                     <div class="status-bar-right">
                         <div class="flow-speed-toggle" title="Switch between fast continuous flow and steady practice">
-                            <span class="toggle-label">Recognition Speed:</span>
-                            <button id="speedFastBtn" class="speed-btn active" data-speed="fast">⚡ Fast Flow (~200ms)</button>
-                            <button id="speedNormalBtn" class="speed-btn" data-speed="normal">🎯 Steady (~500ms)</button>
+                            <span class="toggle-label">Recognition Latency:</span>
+                            <button id="speedFastBtn" class="speed-btn active" data-speed="fast">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                <span>Fast Flow (~200ms)</span>
+                            </button>
+                            <button id="speedNormalBtn" class="speed-btn" data-speed="normal">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <span>Steady (~500ms)</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -254,7 +305,7 @@
                 <!-- Active Practice Goal Banner -->
                 <div class="practice-banner" id="practiceBanner" style="display:none">
                     <div class="practice-info">
-                        <span class="practice-tag">🎯 Practice Goal:</span>
+                        <span class="practice-tag">Practice Target:</span>
                         <strong id="practiceTargetName">Sign A</strong>
                         <span id="practiceInstruction" class="practice-instruction">Make a fist with thumb upright</span>
                     </div>
@@ -268,23 +319,25 @@
                             <video id="webcam" autoplay playsinline muted></video>
                             <canvas id="overlay"></canvas>
                             <div class="video-placeholder" id="videoPlaceholder">
-                                <div class="placeholder-icon">📷</div>
-                                <h3>Webcam Inactive</h3>
-                                <p>Click "Start Camera" to begin real-time sign recognition</p>
+                                <div class="placeholder-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                </div>
+                                <h3>Camera Standby</h3>
+                                <p>Click "Start Camera" to begin on-device sign recognition</p>
                             </div>
                         </div>
                         <div class="video-controls">
                             <button id="startBtn" class="btn btn-primary" disabled>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                                 <span>Start Camera</span>
                             </button>
                             <button id="stopBtn" class="btn btn-outline" style="display:none">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
                                 <span>Stop Camera</span>
                             </button>
                             <button id="flipBtn" class="btn btn-secondary" title="Mirror video image">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-                                <span>🪞 Mirror Camera</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                                <span>Mirror Camera</span>
                             </button>
                         </div>
                     </div>
@@ -311,13 +364,13 @@
                                 </div>
                                 <div class="sentence-actions">
                                     <button id="speakSentence" class="btn-icon" title="Listen with Text-to-Speech">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                     </button>
                                     <button id="copySentence" class="btn-icon" title="Copy sentence to clipboard">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                     </button>
                                     <button id="clearSentence" class="btn-icon" title="Clear sentence">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                                     </button>
                                 </div>
                             </div>
@@ -325,14 +378,15 @@
                                 <span class="sentence-placeholder">Signs will automatically concatenate as you sign...</span>
                             </div>
                             <div class="sentence-hint">
-                                <span>⚡</span> Fast-flow active: ~200ms recognition per sign
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                <span>Continuous signing active (~200ms flow latency)</span>
                             </div>
                         </div>
 
                         <!-- Metrics -->
                         <div class="metrics-grid">
                             <div class="metric-card">
-                                <span class="metric-label">FPS</span>
+                                <span class="metric-label">Frame Rate</span>
                                 <span class="metric-value" id="fpsValue">0</span>
                             </div>
                             <div class="metric-card">
@@ -350,35 +404,51 @@
     <section id="how-it-works" class="section section-dark">
         <div class="container">
             <div class="section-header">
-                <div class="pill-tag">System Architecture</div>
+                <span class="section-tag">System Pipeline</span>
                 <h2 class="section-title">How the System Works</h2>
                 <p class="section-subtitle">
-                    A four-stage real-time computer vision and machine learning pipeline operating purely on your device
+                    A four-stage real-time computer vision and machine learning pipeline operating purely on your device.
                 </p>
             </div>
 
             <div class="steps-grid">
                 <div class="step-card">
-                    <div class="step-number">01</div>
-                    <div class="step-icon">🖐️</div>
+                    <div class="step-header-row">
+                        <span class="step-num-badge">Stage 01</span>
+                        <div class="step-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path></svg>
+                        </div>
+                    </div>
                     <h3>42-Point Landmark Tracking</h3>
-                    <p>Captures all 21 hand joints $(x, y)$ in real time with MediaPipe Hands WASM, tracking every knuckle, joint, and fingertip.</p>
+                    <p>Captures all 21 hand joints (x, y) in real time with MediaPipe Hands WASM, tracking every knuckle, joint, and fingertip.</p>
                 </div>
                 <div class="step-card">
-                    <div class="step-number">02</div>
-                    <div class="step-icon">📐</div>
+                    <div class="step-header-row">
+                        <span class="step-num-badge">Stage 02</span>
+                        <div class="step-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </div>
+                    </div>
                     <h3>Wrist-Relative Normalization</h3>
-                    <p>Translates landmarks relative to the wrist $(x_0, y_0)$ and scales by bounding radius. Signs are recognized accurately anywhere on screen.</p>
+                    <p>Translates landmarks relative to the wrist (x₀, y₀) and scales by bounding radius. Signs are recognized accurately anywhere on screen.</p>
                 </div>
                 <div class="step-card">
-                    <div class="step-number">03</div>
-                    <div class="step-icon">🌲</div>
-                    <h3>100-Tree Parallel Evaluation</h3>
+                    <div class="step-header-row">
+                        <span class="step-num-badge">Stage 03</span>
+                        <div class="step-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"></circle><line x1="12" y1="8" x2="12" y2="14"></line><circle cx="6" cy="19" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="12" y1="14" x2="6" y2="16"></line><line x1="12" y1="14" x2="18" y2="16"></line></svg>
+                        </div>
+                    </div>
+                    <h3>100-Tree Parallel Forest</h3>
                     <p>Evaluates 100 decision trees in pure JavaScript in &lt;0.3ms without external matrix math or server roundtrips.</p>
                 </div>
                 <div class="step-card">
-                    <div class="step-number">04</div>
-                    <div class="step-icon">⚡</div>
+                    <div class="step-header-row">
+                        <span class="step-num-badge">Stage 04</span>
+                        <div class="step-icon-svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                        </div>
+                    </div>
                     <h3>Dynamic Flow Debouncing</h3>
                     <p>Detects rapid sign transitions in &lt;200ms when confidence is high, enabling fluid real-world continuous signing.</p>
                 </div>
@@ -390,14 +460,19 @@
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">
-                <span class="nav-icon">🤟</span>
-                <strong>SignLens</strong> &bull; 3D AI Sign Language Studio
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                    <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                    <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                </svg>
+                <span><strong>SignLens</strong> &bull; Interactive 3D Sign Studio</span>
             </div>
-            <p class="footer-credit">Built with ❤️ by <strong>Pranav Gour</strong> &bull; MediaPipe &bull; Three.js &bull; Random Forest</p>
+            <p class="footer-credit">Engineered by <strong>Pranav Gour</strong> &bull; MediaPipe &bull; Three.js &bull; Client-Side Random Forest</p>
             <div class="footer-links">
                 <a href="#studio-3d">Sign Studio</a>
                 <a href="#demo">Live Demo</a>
-                <a href="#how-it-works">How It Works</a>
+                <a href="#how-it-works">Architecture</a>
                 <a href="https://github.com/Pranavgour7/SignLanguageInterpreterAdvanced" target="_blank" rel="noopener">GitHub</a>
             </div>
         </div>

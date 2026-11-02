@@ -346,6 +346,7 @@
     const toggleMaterialBtn= document.getElementById('toggleMaterialBtn');
     const toggleAutoRotateBtn = document.getElementById('toggleAutoRotateBtn');
     const reset3DViewBtn   = document.getElementById('reset3DViewBtn');
+    const themeToggleBtn   = document.getElementById('themeToggleBtn');
 
     const studioSignSearch = document.getElementById('studioSignSearch');
     const studioClearSearch= document.getElementById('studioClearSearch');
@@ -408,8 +409,40 @@
     let cameraDistance = 4.4;
     let targetCameraDistance = 4.4;
 
+    // ── Dark / Light Theme Manager (Diurnal Timing: Day = Light, Night = Dark) ──
+    function getTimeBasedTheme() {
+        const hours = new Date().getHours();
+        return (hours >= 6 && hours < 19) ? 'light' : 'dark';
+    }
+
+    function initTheme() {
+        const savedTheme = localStorage.getItem('signlens-theme');
+        const initialTheme = (savedTheme === 'light' || savedTheme === 'dark')
+            ? savedTheme
+            : getTimeBasedTheme();
+
+        applyTheme(initialTheme);
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme') || getTimeBasedTheme();
+                const next = current === 'dark' ? 'light' : 'dark';
+                applyTheme(next);
+            });
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try { localStorage.setItem('signlens-theme', theme); } catch (_) {}
+        if (themeToggleBtn) {
+            themeToggleBtn.setAttribute('title', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+        }
+    }
+
     // ── Init ──
     async function init() {
+        initTheme();
         populateStudioPills();
         setupEventListeners();
 
@@ -749,7 +782,7 @@
         if (palmMesh) palmMesh.material = pMat;
 
         if (toggleMaterialBtn) {
-            toggleMaterialBtn.innerHTML = isClayMode ? '<span>🎨 Natural Skin</span>' : '<span>🎨 Studio Clay</span>';
+            toggleMaterialBtn.innerHTML = isClayMode ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg> <span>Natural Skin</span>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg> <span>Studio Clay</span>';
         }
     }
 
@@ -759,7 +792,17 @@
         if (!signInfo) return;
 
         // Update Header & Badge
-        if (studioSignBadge) studioSignBadge.textContent = signInfo.id;
+        if (studioSignBadge) {
+            const BADGE_CODES = {
+                'I Love You': 'ILY',
+                'Bathroom': 'WC',
+                'Okay': 'OK',
+                'Hello': 'HI'
+            };
+            const badgeText = BADGE_CODES[signInfo.id] || signInfo.id;
+            studioSignBadge.textContent = badgeText;
+            studioSignBadge.setAttribute('data-length', badgeText.length >= 3 ? 'long' : (badgeText.length === 2 ? 'medium' : 'short'));
+        }
         if (studioSignTitle) studioSignTitle.textContent = signInfo.title;
         if (studioCatTag) {
             const catLabel = signInfo.category === 'letter' ? 'Alphabet' : (signInfo.category === 'number' ? 'Number' : 'Phrase');
@@ -1214,7 +1257,7 @@
             toggle3DMirrorBtn.addEventListener('click', () => {
                 is3DMirrored = !is3DMirrored;
                 toggle3DMirrorBtn.classList.toggle('active', is3DMirrored);
-                toggle3DMirrorBtn.innerHTML = is3DMirrored ? '<span>🪞 Normal (Right Hand)</span>' : '<span>🪞 Mirror (Left Hand)</span>';
+                toggle3DMirrorBtn.innerHTML = is3DMirrored ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg> <span>Right Hand (Normal)</span>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg> <span>Left Hand (Mirrored)</span>';
             });
         }
 
