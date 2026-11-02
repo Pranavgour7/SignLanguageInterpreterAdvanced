@@ -22,7 +22,7 @@ hands = mp_hands.Hands(static_image_mode=False, min_detection_confidence=0.3)
 # Define label mapping
 labels_dict = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'K',
                10: 'L', 11: 'M', 12: 'O', 13: 'R', 14: 'U', 15: 'V', 16: 'W', 17: 'Y', 18: 'Hello',
-               19: 'Okay', 20: 'Bathroom', 21: '1', 22: '3', 23: '4', 24: '7'}
+               19: 'Okay', 20: 'Bathroom', 21: '1', 22: '3', 23: '4', 24: '7',25:'I Love You'}
 
 while True:
     data_aux = []
@@ -58,7 +58,7 @@ while True:
         y2 = int(max(y_) * H) - 10
 
         # Ensure data is padded or truncated to match the PCA input length (42 features)
-        fixed_length = 24  # Adjust to your model's input size
+        fixed_length = 25  # Adjust to your model's input size
         if len(data_aux) < fixed_length:
             data_aux += [0] * (fixed_length - len(data_aux))  # Pad with zeros
         elif len(data_aux) > fixed_length:
@@ -81,7 +81,7 @@ while True:
 
         # Draw bounding box and label
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
-        cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 255, 255), 3,
+        cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 255, 0), 3,
                     cv2.LINE_AA)
 
     # Display frame

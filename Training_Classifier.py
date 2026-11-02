@@ -11,7 +11,7 @@ data = data_dict['data']
 labels = np.asarray(data_dict['labels'])
 
 # Define a fixed length (e.g., for 21 hand landmarks with 2 coordinates each: 21 * 2 = 42)
-fixed_length = 24  # Adjust this based on the expected number of coordinates
+fixed_length = 25  # Adjust this based on the expected number of coordinates
 
 # Pad or truncate each data sequence to the fixed length
 def pad_or_truncate(sequence, length):
@@ -27,7 +27,7 @@ data = np.array([pad_or_truncate(seq, fixed_length) for seq in data])
 x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, shuffle=True, stratify=labels)
 
 # Apply PCA
-pca = PCA(n_components=24)
+pca = PCA(n_components=25)
 x_train_pca = pca.fit_transform(x_train)
 x_test_pca = pca.transform(x_test)
 

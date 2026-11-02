@@ -16,7 +16,7 @@ labels = []
 # Map numeric directory names to corresponding alphabet labels
 alphabet_labels = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'I', 9: 'K',
                10: 'L', 11: 'M', 12: 'O', 13: 'R', 14: 'U', 15: 'V', 16: 'W', 17: 'Y', 18: 'Hello',
-               19: 'Okay', 20: 'Bathroom', 21: '1', 22: '3', 23: '4', 24: '7'}
+               19: 'Okay', 20: 'Bathroom', 21: '1', 22: '3', 23: '4', 24: '7',25:'I Love You'}
 
 for dir_ in os.listdir(DATA_DIR):
     dir_index = int(dir_)  # Assuming directory names are 0-25
